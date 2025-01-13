@@ -22,17 +22,17 @@ static void* last_known_license_widget_id = NULL;
 // Simple logging function for debugging. Cant just print to stdout because sublime deattaches itself
 void log_interceptor(const char* format, ...) {
 	FILE *file = fopen("/tmp/sublime-license-interceptor.log", "a");
-    if (!file) {
-        perror("Failed to open file");
-        exit(EXIT_FAILURE);
-    }
+	if (!file) {
+		perror("Failed to open file");
+		exit(EXIT_FAILURE);
+	}
 
-    va_list args;
-    va_start(args, format);
-    vfprintf(file, format, args);
-    va_end(args);
+	va_list args;
+	va_start(args, format);
+	vfprintf(file, format, args);
+	va_end(args);
 
-    fclose(file);  
+	fclose(file);  
 }
 
 // Initializes the pointer to the real dlsym function
@@ -89,14 +89,14 @@ void* gtk_message_dialog_new(void* parent, int flags, int msg_type, int buttons,
 
 	// get the first and only argument
 	va_list args;
-    va_start(args, fmt);
-    const char *first_arg = va_arg(args, const char *);
-    va_end(args);      
+	va_start(args, fmt);
+	const char *first_arg = va_arg(args, const char *);
+	va_end(args);
 
-    // run the real gtk function
-    void* widget_id = gtk_message_dialog_new_f(parent, flags, msg_type, buttons, fmt, first_arg);
+	// run the real gtk function
+	void* widget_id = gtk_message_dialog_new_f(parent, flags, msg_type, buttons, fmt, first_arg);
 
-   	if (strcmp(LICENSE_TEXT, first_arg) == 0) {
+	if (strcmp(LICENSE_TEXT, first_arg) == 0) {
 		// found the license popup
 		log_interceptor("found the bastard\n");
 		last_known_license_widget_id = widget_id;
