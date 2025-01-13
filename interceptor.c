@@ -109,6 +109,8 @@ void* gtk_message_dialog_new(void* parent, int flags, int msg_type, int buttons,
 // so whenever it is called, we check if its the same widget ID that we have saved
 // as belonging to a license popup, and if it is, we ignore this call
 void gtk_widget_show(void* widget) {
+	init_gtk_f();
+	
 	if (last_known_license_widget_id == widget) {
 		log_interceptor("intercepting gtk_widget_show bastard\n");
 		return;
