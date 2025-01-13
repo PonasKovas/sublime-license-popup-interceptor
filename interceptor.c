@@ -84,7 +84,10 @@ void* gtk_message_dialog_new(void* parent, int flags, int msg_type, int buttons,
 	// is it even possible to call the real gtk function with those same args?
 	if (strcmp("%s", fmt) != 0) {
 		log_interceptor("unexpected fmt: '%s'\n", fmt);
-		return NULL;
+		// this definitely can be improved to handle formats more dynamically
+		// but so far its been working for me like this, so maybe sublime just never uses anything
+		// other than a simple "%s", in which case there is no point to "fix" this
+		return gtk_message_dialog_new_f(parent, flags, msg_type, buttons, "%s", "unexpected format intercepted by sublime-license-interceptor");
 	}
 
 	// get the first and only argument
